@@ -1,0 +1,78 @@
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — Auth Service Database
+  # ---------------------------------------------------------------------------
+  auth-db:
+    image: postgres:16-alpine
+    container_name: api-tracker-auth-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${AUTH_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
+      POSTGRES_DB: ${AUTH_DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    networks:
+      - api-tracker-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${AUTH_DB_USER} -d ${AUTH_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — Monitor Service Database
+  # ---------------------------------------------------------------------------
+  monitor-db:
+    image: postgres:16-alpine
+    container_name: api-tracker-monitor-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${MONITOR_DB_USER}
+      POSTGRES_PASSWORD: ${MONITOR_DB_PASSWORD}
+      POSTGRES_DB: ${MONITOR_DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - monitor_db_data:/var/lib/postgresql/data
+    networks:
+      - api-tracker-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${MONITOR_DB_USER} -d ${MONITOR_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # Redis — Caching, rate limiting, latest monitor results
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: api-tracker-redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - api-tracker-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+networks:
+  api-tracker-network:
+    driver: bridge
+
+volumes:
+  auth_db_data:
+  monitor_db_data:
+  redis_data:
