@@ -82,7 +82,40 @@ const login = async ({ email, password }) => {
   };
 };
 
+const refresh = async ({ refreshToken }) => {
+  const tokenHash = hashRefreshToken(refreshToken);
+  const storedToken = await RefreshToken.findValidByTokenHash(tokenHash);
+
+  if (!storedToken) {
+    throw new AppError('Invalid or expired refresh token', 401);
+  }
+
+  const user = await User.findById(storedToken.user_id);
+
+  if (!user) {
+    throw new AppError('Invalid or expired refresh token', 401);
+  }
+
+  await RefreshToken.revokeById(storedToken.id);
+
+  const tokens = await issueTokens(user);
+
+  return { tokens };
+};
+
+const getProfile = async (userId) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  return User.toPublic(user);
+};
+
 module.exports = {
   register,
   login,
+  refresh,
+  getProfile,
 };

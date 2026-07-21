@@ -21,7 +21,29 @@ const login = asyncHandler(async (req, res) => {
   });
 });
 
+const refresh = asyncHandler(async (req, res) => {
+  const { tokens } = await authService.refresh(req.body);
+
+  res.status(200).json({
+    success: true,
+    message: 'Token refreshed successfully',
+    data: { tokens },
+  });
+});
+
+const getProfile = asyncHandler(async (req, res) => {
+  const user = await authService.getProfile(req.user.id);
+
+  res.status(200).json({
+    success: true,
+    message: 'Profile retrieved successfully',
+    data: { user },
+  });
+});
+
 module.exports = {
   register,
   login,
+  refresh,
+  getProfile,
 };
