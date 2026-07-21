@@ -8,18 +8,26 @@ const createServiceProxy = ({ target, pathFilter, serviceName }) => {
     pathFilter,
     on: {
       proxyReq: (proxyReq, req) => {
+        console.log("➡️ ProxyReq:", req.method, req.originalUrl, "->", target);
+    
         if (req.user) {
-          proxyReq.setHeader('X-User-Id', req.user.id);
-          proxyReq.setHeader('X-User-Email', req.user.email);
+          proxyReq.setHeader("X-User-Id", req.user.id);
+          proxyReq.setHeader("X-User-Email", req.user.email);
         }
       },
+    
+      proxyRes: (proxyRes, req) => {
+        console.log("⬅️ ProxyRes:", proxyRes.statusCode, req.originalUrl);
+      },
+    
       error: (err, req, res) => {
-        console.error(`${serviceName} proxy error: ${err.message}`);
-
+        console.error("❌ Proxy Error");
+        console.error(err);
+    
         if (!res.headersSent) {
           res.status(503).json({
             success: false,
-            message: `${serviceName} unavailable`,
+            message: err.message,
           });
         }
       },

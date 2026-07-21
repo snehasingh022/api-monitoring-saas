@@ -23,8 +23,9 @@ const createMonitorRules = [
     .optional()
     .isInt({ min: 1, max: 60 })
     .withMessage('Interval must be between 1 and 60 minutes'),
+    
   body('alertEmail')
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .isEmail()
     .withMessage('A valid alert email is required')

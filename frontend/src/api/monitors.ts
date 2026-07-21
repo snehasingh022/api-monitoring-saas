@@ -20,10 +20,17 @@ export const monitorsApi = {
   },
 
   create(payload: CreateMonitorPayload) {
+    const { alertEmail, ...rest } = payload;
+
     return apiRequest<{ monitor: Monitor }>('/api/monitors', {
       method: 'POST',
       auth: true,
-      body: payload,
+      body: {
+        ...rest,
+        ...(alertEmail.trim()
+          ? { alertEmail: alertEmail.trim() }
+          : {}),
+      },
     });
   },
 

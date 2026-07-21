@@ -4,6 +4,9 @@ import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { MonitorsPage } from './pages/MonitorsPage';
+import { MonitorDetailsPage } from './pages/MonitorDetailsPage';
 
 function AppHeader() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -24,9 +27,15 @@ function AppHeader() {
               <span className="hidden text-slate-500 sm:inline">
                 {user?.email}
               </span>
-              <Link to="/dashboard" className="hover:text-teal-800">
-                Dashboard
-              </Link>
+              <div className="flex items-center gap-4">
+                <Link to="/dashboard" className="hover:text-teal-800">
+                  Dashboard
+                </Link>
+
+                <Link to="/monitors" className="hover:text-teal-800">
+                  Monitors
+                </Link>
+              </div>
               <button
                 type="button"
                 onClick={logout}
@@ -65,7 +74,31 @@ export default function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
+
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/monitors"
+                element={
+                  <ProtectedRoute>
+                    <MonitorsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/monitors/:id"
+                element={
+                  <ProtectedRoute>
+                    <MonitorDetailsPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
