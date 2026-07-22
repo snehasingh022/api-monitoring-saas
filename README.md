@@ -1,67 +1,144 @@
-# API Monitoring SaaS
+<div align="center">
 
-A production-ready SaaS application for monitoring websites and REST APIs. Built with a microservices architecture, Docker, PostgreSQL, Redis, and JWT authentication.
+# 📡 API Monitoring Platform
 
-## Architecture
+### A microservices-based platform to monitor REST APIs in real time — uptime, response times, and alerts, all in one place.
 
-| Service              | Responsibility                                      |
-| -------------------- | --------------------------------------------------- |
-| **API Gateway**      | Routing, JWT verification, rate limiting, logging |
-| **Auth Service**     | Register, login, refresh token, user profile        |
-| **Monitor Service**  | CRUD monitors, health checks, history, dashboard    |
-| **Notification Service** | Email alerts on status changes                |
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
 
-## Tech Stack
+</div>
 
-- **Frontend:** React, TypeScript, Vite, TailwindCSS
-- **Backend:** Node.js, Express.js
-- **Database:** PostgreSQL (one instance per domain service)
-- **Cache:** Redis
-- **Auth:** JWT (access + refresh tokens)
-- **Containers:** Docker, Docker Compose
+---
 
-## Project Structure
+## ✨ Overview
+
+**API Monitoring Platform** is a microservices-based system that continuously tracks the health of your REST APIs. It monitors uptime, measures response times, logs HTTP status codes, and sends deduplicated email alerts the moment something breaks — all wrapped in a containerized, production-style architecture.
+
+---
+
+## 🚀 Features
+
+| | |
+|---|---|
+| 🧩 **Microservices Architecture** | Dedicated Authentication, Monitoring, Notification, and API Gateway services — independently deployable |
+| 🔐 **JWT Authentication** | Access + refresh tokens, with route protection enforced at the gateway level |
+| ⏱️ **Background Scheduler** | Periodically pings registered APIs, logging response time, status code, and uptime history |
+| ⚡ **Redis-Powered** | Dashboard caching + alert deduplication — no repeat emails, no redundant DB hits |
+| 📧 **Smart Email Alerts** | Notifies you the instant a monitored API goes down or recovers |
+| 🐳 **Fully Dockerized** | One command spins up every service with Docker Compose |
+
+---
+
+## 🏗️ Architecture
 
 ```
-API_TRACKER/
-├── frontend/                  # React SPA
-├── services/
-│   ├── api-gateway/
-│   ├── auth-service/
-│   ├── monitor-service/
-│   └── notification-service/
-├── scripts/                   # Utility scripts
-├── docker-compose.yml
-└── .env.example
+                        ┌───────────────────────┐
+                        │      API Gateway      │
+                        │  (JWT Auth + Routing) │
+                        └───────────┬───────────┘
+                                    │
+        ┌───────────────────────────┼───────────────────────────┐
+        │                           │                           │
+┌───────▼────────┐        ┌─────────▼─────────┐        ┌────────▼────────┐
+│  Authentication  │        │     Monitoring     │        │   Notification   │
+│     Service      │        │      Service       │        │      Service      │
+└──────────────────┘        └─────────┬──────────┘        └────────┬─────────┘
+                                       │                            │
+                              ┌────────▼────────┐          ┌────────▼────────┐
+                              │   PostgreSQL    │          │      Redis      │
+                              │ (monitor history)│          │ (cache/dedup)  │
+                              └─────────────────┘          └─────────────────┘
 ```
 
-## Prerequisites
+---
 
-- Git
-- Node.js (v18+)
-- Docker Desktop (with engine running)
-- Docker Compose
+## 🛠️ Tech Stack
 
-## Getting Started
+<div align="center">
 
-> Full setup instructions will be added as services are implemented.
+| Layer | Stack |
+|:---:|:---:|
+| Frontend | React · TypeScript |
+| Backend | Node.js · Express.js |
+| Database | PostgreSQL |
+| Caching / Dedup | Redis |
+| Auth | JWT (Access + Refresh) |
+| Infra | Docker · Docker Compose |
 
-1. Clone the repository
-2. Copy `.env.example` to `.env` and update the values
-3. Run `docker compose up --build`
+</div>
 
-## Development Status
+---
 
-| Phase | Description              | Status      |
-| ----- | ------------------------ | ----------- |
-| 1     | Foundation & scaffolding | In progress |
-| 2     | Auth Service             | Pending     |
-| 3     | API Gateway              | Pending     |
-| 4     | Monitor Service          | Pending     |
-| 5     | Notification Service     | Pending     |
-| 6     | Frontend                 | Pending     |
-| 7     | Production polish        | Pending     |
+## ⚙️ Getting Started
 
-## License
+### Prerequisites
+- 🐳 Docker & Docker Compose
+- 🟢 Node.js (for local dev outside containers)
 
-Portfolio project — not licensed for commercial use.
+### Installation
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/<your-username>/api-monitoring-platform.git
+cd api-monitoring-platform
+
+# 2. Configure environment variables
+cp .env.example .env
+
+# 3. Launch all services
+docker-compose up --build
+```
+
+### 🔑 Environment Variables
+
+```env
+DATABASE_URL=postgresql://user:password@postgres:5432/monitoring
+REDIS_URL=redis://redis:6379
+JWT_ACCESS_SECRET=your_access_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+SMTP_HOST=smtp.example.com
+SMTP_USER=your_email
+SMTP_PASS=your_password
+```
+
+---
+
+## 📡 API Reference
+
+| Method | Endpoint | Description |
+|:---:|---|---|
+| `POST` | `/auth/register` | Register a new user |
+| `POST` | `/auth/login` | Login and receive JWT tokens |
+| `POST` | `/auth/refresh` | Refresh access token |
+| `POST` | `/monitors` | Add a new API to monitor |
+| `GET` | `/monitors` | List all monitored APIs |
+| `GET` | `/monitors/:id/history` | Get uptime / response history |
+| `DELETE` | `/monitors/:id` | Remove a monitored API |
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Slack / Discord alert integrations
+- [ ] Configurable monitoring intervals per endpoint
+- [ ] Public status page generation
+- [ ] Multi-region monitoring support
+
+---
+
+## 📄 License
+
+Licensed under the **MIT License**.
+
+---
+
+<div align="center">
+
+Made with ⚙️ and a lot of `docker-compose up`
+
+</div>
