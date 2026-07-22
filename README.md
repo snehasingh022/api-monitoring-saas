@@ -17,7 +17,7 @@
 
 ## ✨ Overview
 
-**API Monitoring Platform** is a microservices-based system that continuously tracks the health of your REST APIs. It monitors uptime, measures response times, logs HTTP status codes, and sends deduplicated email alerts the moment something breaks — all wrapped in a containerized, production-style architecture.
+**API Monitoring Platform** is a microservices-based observability platform that continuously monitors REST APIs by tracking uptime, response times, HTTP status codes, and availability. It sends real-time email alerts for incidents while leveraging Redis for caching and alert deduplication in a production-style containerized architecture.
 
 ---
 
