@@ -26,7 +26,7 @@
 A modern enterprise-grade monitoring dashboard inspired by Grafana, Datadog, Vercel, and GitHub.
 
 <p align="center">
-  <img src="./assets/dashboard.png" alt="API Pulse Dashboard" width="100%">
+  <img src="./Screenshot 2026-07-26 015810.png" alt="API Pulse Dashboard" width="100%">
 </p>
 
 ## 🚀 Features
