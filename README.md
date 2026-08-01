@@ -92,8 +92,8 @@ A modern enterprise-grade monitoring dashboard inspired by Grafana, Datadog, Ver
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/SUJALGOYALL/PulseAPI-api-monitoring-platform.git
-cd api-monitoring-platform
+git clone https://github.com/snehasingh022/api-monitoring-saas.git
+cd api-monitoring-saas
 
 # 2. Configure environment variables
 cp .env.example .env
