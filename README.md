@@ -92,7 +92,7 @@ A modern enterprise-grade monitoring dashboard inspired by Grafana, Datadog, Ver
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/<your-username>/api-monitoring-platform.git
+git clone https://github.com/snehasingh022/api-monitoring-platform.git
 cd api-monitoring-platform
 
 # 2. Configure environment variables
